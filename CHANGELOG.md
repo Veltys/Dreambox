@@ -15,6 +15,10 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 ## [Cancelado]
 Nada, por ahora
 
+## [1.0.1] - 2021-09-13
+### Arreglado
+- Calidad de código
+
 ## [1.0.0] - 2021-09-13
 ### Añadido
 - Archivo README.MD.
