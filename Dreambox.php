@@ -61,87 +61,91 @@ class Dreambox {
 }
 
 
-$dreambox = new Dreambox();
+function main() {
+	$dreambox = new Dreambox();
 
 
-if(isset($_REQUEST["xspf"]) || isset($_REQUEST["m3u"])) {
-	$allsvc = simplexml_load_file($dreambox->urlAllServices);
+	if(isset($_REQUEST["xspf"]) || isset($_REQUEST["m3u"])) {
+		$allsvc = simplexml_load_file($dreambox->urlAllServices);
 
-	$i = 0;
+		$i = 0;
 
-	if(isset($_REQUEST["xspf"]) && $_REQUEST["xspf"] === "save") {
-		$xspf = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL . '<playlist xmlns="http://xspf.org/ns/0/" xmlns:vlc="http://www.videolan.org/vlc/playlist/ns/0/" version="1">' . PHP_EOL . '	<title>TV Channels</title>' . PHP_EOL . '	<trackList>' . PHP_EOL;
+		if(isset($_REQUEST["xspf"]) && $_REQUEST["xspf"] === "save") {
+			$xspf = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL . '<playlist xmlns="http://xspf.org/ns/0/" xmlns:vlc="http://www.videolan.org/vlc/playlist/ns/0/" version="1">' . PHP_EOL . '	<title>TV Channels</title>' . PHP_EOL . '	<trackList>' . PHP_EOL;
 
-		foreach($allsvc->e2bouquet as $e2bouquet) {
-			$e2bouquet_name = $e2bouquet->e2servicename;
+			foreach($allsvc->e2bouquet as $e2bouquet) {
+				$e2bouquet_name = $e2bouquet->e2servicename;
 
-			$xspf .= '		<track>' . PHP_EOL . '			<location></location>' . PHP_EOL . '			<title>' . $e2bouquet_name . '</title>' . PHP_EOL . '		</track>' . PHP_EOL;
+				$xspf .= '		<track>' . PHP_EOL . '			<location></location>' . PHP_EOL . '			<title>' . $e2bouquet_name . '</title>' . PHP_EOL . '		</track>' . PHP_EOL;
 
-			foreach($allsvc->e2bouquet[$i]->e2servicelist->e2service as $e2service) {
-				$e2service_refr = $e2service->e2servicereference;
-				$e2service_name = $e2service->e2servicename;
+				foreach($allsvc->e2bouquet[$i]->e2servicelist->e2service as $e2service) {
+					$e2service_refr = $e2service->e2servicereference;
+					$e2service_name = $e2service->e2servicename;
 
-				if(strstr($e2service_refr, "1:64") != false) {
-					$xspf .= '		<track>' . PHP_EOL . '			<location></location>' . PHP_EOL . '			<title>' . $e2service_name . '</title>' . PHP_EOL . '		</track>' . PHP_EOL;
+					if(strstr($e2service_refr, "1:64") != false) {
+						$xspf .= '		<track>' . PHP_EOL . '			<location></location>' . PHP_EOL . '			<title>' . $e2service_name . '</title>' . PHP_EOL . '		</track>' . PHP_EOL;
+					}
+					else {
+						$xspf .= '		<track>' . PHP_EOL . '			<location>' . $dreambox->streamAddress . $e2service_refr . '</location>' . PHP_EOL . '			<title>' . $e2service_name . '</title>' . PHP_EOL . '		</track>' . PHP_EOL;
+					}
 				}
-				else {
-					$xspf .= '		<track>' . PHP_EOL . '			<location>' . $dreambox->streamAddress . $e2service_refr . '</location>' . PHP_EOL . '			<title>' . $e2service_name . '</title>' . PHP_EOL . '		</track>' . PHP_EOL;
-				}
+
+				$i++;
+
+				$xspf .= '	</trackList>' . PHP_EOL . '</playlist>' . PHP_EOL;
 			}
 
-			$i++;
+			header('Content-Type: plain/text');
+			header('Content-disposition: attachment; filename=' . $dreambox->playlistFilename . '.xspf');
 
-			$xspf .= '	</trackList>' . PHP_EOL . '</playlist>' . PHP_EOL;
+			print($xspf);
 		}
+		elseif(isset($_REQUEST["m3u"]) && $_REQUEST["m3u"] === "save") {
+			$m3u = '#EXTM3U' . PHP_EOL;
 
-		header('Content-Type: plain/text');
-		header('Content-disposition: attachment; filename=' . $dreambox->playlistFilename . '.xspf');
+			foreach($allsvc->e2bouquet as $e2bouquet) {
+				$e2bouquet_name = $e2bouquet->e2servicename;
 
-		print($xspf);
-	}
-	elseif(isset($_REQUEST["m3u"]) && $_REQUEST["m3u"] === "save") {
-		$m3u = '#EXTM3U' . PHP_EOL;
+				foreach($allsvc->e2bouquet[$i]->e2servicelist->e2service as $e2service) {
+					$e2service_refr = $e2service->e2servicereference;
+					$e2service_name = $e2service->e2servicename;
 
-		foreach($allsvc->e2bouquet as $e2bouquet) {
-			$e2bouquet_name = $e2bouquet->e2servicename;
-
-			foreach($allsvc->e2bouquet[$i]->e2servicelist->e2service as $e2service) {
-				$e2service_refr = $e2service->e2servicereference;
-				$e2service_name = $e2service->e2servicename;
-
-				if(strstr($e2service_refr, "1:64") == false) {
-					$m3u .= '#EXTINF:0 tvg-id="ext" group-title="Channels",' . $e2service_name . PHP_EOL . $dreambox->streamAddress . $e2service_refr . PHP_EOL;
+					if(strstr($e2service_refr, "1:64") == false) {
+						$m3u .= '#EXTINF:0 tvg-id="ext" group-title="Channels",' . $e2service_name . PHP_EOL . $dreambox->streamAddress . $e2service_refr . PHP_EOL;
+					}
 				}
+
+				$i++;
 			}
 
-			$i++;
+			header('Content-Type: plain/text');
+			header('Content-disposition: attachment; filename=' . $dreambox->playlistFilename . '.m3u');
+
+			print($m3u);
 		}
+	}
+	else {
+		$html = <<<EOS
+	<html>
+		<head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<title>Enigma2 to VLC</title>
+		</head>
+		<body>
+			<h1>Enigma2 Channels List Converter</h1>
+			<p>This PHP script will download the channels list from your Enigma2 box at <span style="font-weight: 700; font-style: italic;">$dreambox->ipAddress</span> and convert them to an XSPF playlist for VLC player.</p>
+			<p>The stream URLs will point to the address <span style="font-weight: 700; font-style: italic;">$dreambox->streamaddress</span> inside the playlist.<br />To modify the box and the URL addresses, please edit this PHP script on your server.</p>
+			<p>Please note that if the channels list on the box is big (eg. rotor list), it may take a couple of seconds to process the conversion.</p>
+			<p><a href="${_SERVER['REQUEST_URI']}?xspf=save">Click here to save the XSPF playlist on your PC</a><br />
+			<a href="${_SERVER['REQUEST_URI']}?m3u=save">Click here to save the M3U playlist on your PC</a></p>
+		</body>
+	</html>
+	EOS;
 
-		header('Content-Type: plain/text');
-		header('Content-disposition: attachment; filename=' . $dreambox->playlistFilename . '.m3u');
-
-		print($m3u);
+		print($html);
 	}
 }
-else {
-	$html = <<<EOS
-<html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>Enigma2 to VLC</title>
-	</head>
-	<body>
-		<h1>Enigma2 Channels List Converter</h1>
-		<p>This PHP script will download the channels list from your Enigma2 box at <span style="font-weight: 700; font-style: italic;">$dreambox->ipAddress</span> and convert them to an XSPF playlist for VLC player.</p>
-		<p>The stream URLs will point to the address <span style="font-weight: 700; font-style: italic;">$dreambox->streamaddress</span> inside the playlist.<br />To modify the box and the URL addresses, please edit this PHP script on your server.</p>
-		<p>Please note that if the channels list on the box is big (eg. rotor list), it may take a couple of seconds to process the conversion.</p>
-		<p><a href="${_SERVER['REQUEST_URI']}?xspf=save">Click here to save the XSPF playlist on your PC</a><br />
-		<a href="${_SERVER['REQUEST_URI']}?m3u=save">Click here to save the M3U playlist on your PC</a></p>
-	</body>
-</html>
-EOS;
 
-	print($html);
-}
+main();
 
 ?>
