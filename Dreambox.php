@@ -1,118 +1,130 @@
 <?php
 
-/*
+
+/**
+ *
  * @file:           Dreambox.php
  * @brief:          Dreambox Enigma2 playlist extractor and transformer
  * @author:         Veltys
  * @originalAuthor: robertut
- * @date:           2021-09-13
- * @version:        1.0.1
+ * @date:           2022-04-26
+ * @version:        1.0.2
  * @usage:          Put on a webserver an visit its URL
  * @note:           Original file from ➡️ https://forums.openpli.org/topic/29950-enigma2-channels-list-to-vlc-playlist-converter-php/#entry366485
  * @note:           Based on openwebif api at http://e2devel.com/apidoc/webif/#getallservices
  */
 
 
+/*
+ * Clase Dreambox
+ * Contiene la configuración necesaria agrupada en un objeto
+ */
 class Dreambox {
-    public $ipAddress;
-    public $user;
-    public $password;
-    public $https;
-    public $urlAllServices;
-    public $port;
-    public $streamAddress;
-    public $playlistFilename;
+	// @formatter:off
+
+	public $ipAddress;															///< IP address of the Enigma2 box on the network, with access to the web interface
+	public $user;																///< User with access to the web interface
+	public $password;															///< Password with access to the web interface
+	public $https;																///< Use secure (https) protocol
+	public $urlAllServices;														///< URL for "all services"
+	public $port;																///< Port of the streaming proxy
+	public $streamAddress;														///< Entire http address and port of the streaming proxy
+	public $playlistFilename;													///< The name of the playlist file, extension will be added automatically
+
+	// @formatter:on
 
 
-    function __construct() {
-        // IP address of the Enigma2 box on the network, with access to the web interface
-        $this->ipAddress        = '***REMOVED***';
+	/**
+	 * Constructor de clase
+	 * Crea el objeto
+	 */
+	function __construct() {
+		// @formatter:off
 
-        // User and password with access to the web interface
-        $this->user             = '***REMOVED***';
-        $this->password         = '***REMOVED***';
+		$this->ipAddress 		= '';
 
-        // Use secure (https) protocol
-        $this->https            = true;
+		$this->user 			= '';
+		$this->password 		= '';
 
-        // URL for "all services"
-        $this->urlAllServices   = 'http' . ($this->https ? 's' : '') . '://' . ($this->user != '' && $this->password != '' ? $this->user . ':' . $this->password . '@' : '') . $this->ipAddress . ':' . '/web/getallservices';
+		$this->https 			= true;
 
-        // Port of the streaming proxy
-        $this->port             = '8001';
+		$this->urlAllServices 	= 'http' . ($this->https ? 's' : '') . '://' . ($this->user != '' && $this->password != '' ? $this->user . ':' . $this->password . '@' : '') . $this->ipAddress . ':' . '/web/getallservices';
 
-        // Entire http address and port of the streaming proxy
-        $this->streamAddress    = 'http' . ($this->https ? 's' : '') . '://' . ($this->user != '' && $this->password != '' ? $this->user . ':' . $this->password . '@' : '') . $this->ipAddress . ':' . $this->port . '/';
+		$this->port 			= '8001';
 
-        // the name of the playlist file, extension will be added automatically
-        $this->playlistFilename = "***REMOVED***";
-    }
+		$this->streamAddress 	= 'http' . ($this->https ? 's' : '') . '://' . ($this->user != '' && $this->password != '' ? $this->user . ':' . $this->password . '@' : '') . $this->ipAddress . ':' . $this->port . '/';
+
+		$this->playlistFilename = "";
+
+		// @formatter:on
+	}
 }
+
 
 $dreambox = new Dreambox();
 
+
 if(isset($_REQUEST["xspf"]) || isset($_REQUEST["m3u"])) {
-    $allsvc = simplexml_load_file($dreambox->urlAllServices);
-    
-    $i = 0;
-    
-    if(isset($_REQUEST["xspf"]) && $_REQUEST["xspf"] === "save") {
-        $xspf = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL . '<playlist xmlns="http://xspf.org/ns/0/" xmlns:vlc="http://www.videolan.org/vlc/playlist/ns/0/" version="1">' . PHP_EOL . '	<title>TV Channels</title>' . PHP_EOL . '	<trackList>' . PHP_EOL;
+	$allsvc = simplexml_load_file($dreambox->urlAllServices);
 
-        foreach($allsvc->e2bouquet as $e2bouquet) {
-            $e2bouquet_name=$e2bouquet->e2servicename;
+	$i = 0;
 
-            $xspf .= '		<track>' . PHP_EOL . '			<location></location>' . PHP_EOL . '			<title>' . $e2bouquet_name . '</title>' . PHP_EOL . '		</track>' . PHP_EOL;
+	if(isset($_REQUEST["xspf"]) && $_REQUEST["xspf"] === "save") {
+		$xspf = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL . '<playlist xmlns="http://xspf.org/ns/0/" xmlns:vlc="http://www.videolan.org/vlc/playlist/ns/0/" version="1">' . PHP_EOL . '	<title>TV Channels</title>' . PHP_EOL . '	<trackList>' . PHP_EOL;
 
-            foreach ($allsvc->e2bouquet[$i]->e2servicelist->e2service as $e2service) {
-                $e2service_refr=$e2service->e2servicereference;
-                $e2service_name=$e2service->e2servicename;
+		foreach($allsvc->e2bouquet as $e2bouquet) {
+			$e2bouquet_name = $e2bouquet->e2servicename;
 
-                if(strstr($e2service_refr, "1:64") != false) {
-                    $xspf .= '		<track>' . PHP_EOL . '			<location></location>' . PHP_EOL . '			<title>' . $e2service_name . '</title>' . PHP_EOL . '		</track>' . PHP_EOL;
-                }
-                else {
-                    $xspf .= '		<track>' . PHP_EOL . '			<location>' . $dreambox->streamAddress . $e2service_refr . '</location>' . PHP_EOL . '			<title>' . $e2service_name . '</title>' . PHP_EOL . '		</track>' . PHP_EOL;
-                }
-            }
+			$xspf .= '		<track>' . PHP_EOL . '			<location></location>' . PHP_EOL . '			<title>' . $e2bouquet_name . '</title>' . PHP_EOL . '		</track>' . PHP_EOL;
 
-            $i++;
+			foreach($allsvc->e2bouquet[$i]->e2servicelist->e2service as $e2service) {
+				$e2service_refr = $e2service->e2servicereference;
+				$e2service_name = $e2service->e2servicename;
 
-            $xspf .= '	</trackList>' . PHP_EOL . '</playlist>' . PHP_EOL;
+				if(strstr($e2service_refr, "1:64") != false) {
+					$xspf .= '		<track>' . PHP_EOL . '			<location></location>' . PHP_EOL . '			<title>' . $e2service_name . '</title>' . PHP_EOL . '		</track>' . PHP_EOL;
+				}
+				else {
+					$xspf .= '		<track>' . PHP_EOL . '			<location>' . $dreambox->streamAddress . $e2service_refr . '</location>' . PHP_EOL . '			<title>' . $e2service_name . '</title>' . PHP_EOL . '		</track>' . PHP_EOL;
+				}
+			}
 
-        }
+			$i++;
 
-        header('Content-Type: plain/text');
-        header('Content-disposition: attachment; filename=' . $dreambox->playlistFilename . '.xspf');
+			$xspf .= '	</trackList>' . PHP_EOL . '</playlist>' . PHP_EOL;
+		}
 
-        print($xspf);
-    }
-    elseif(isset($_REQUEST["m3u"]) && $_REQUEST["m3u"] === "save") {
-        $m3u = '#EXTM3U' . PHP_EOL;
+		header('Content-Type: plain/text');
+		header('Content-disposition: attachment; filename=' . $dreambox->playlistFilename . '.xspf');
 
-        foreach($allsvc->e2bouquet as $e2bouquet) {
-            $e2bouquet_name=$e2bouquet->e2servicename;
+		print($xspf);
+	}
+	elseif(isset($_REQUEST["m3u"]) && $_REQUEST["m3u"] === "save") {
+		$m3u = '#EXTM3U' . PHP_EOL;
 
-            foreach ($allsvc->e2bouquet[$i]->e2servicelist->e2service as $e2service) {
-                $e2service_refr=$e2service->e2servicereference;
-                $e2service_name=$e2service->e2servicename;
+		foreach($allsvc->e2bouquet as $e2bouquet) {
+			$e2bouquet_name = $e2bouquet->e2servicename;
 
-                if(strstr($e2service_refr, "1:64") == false) {
-                    $m3u .= '#EXTINF:0 tvg-id="ext" group-title="Channels",' . $e2service_name . PHP_EOL . $dreambox->streamAddress . $e2service_refr . PHP_EOL;
-                }
-            }
+			foreach($allsvc->e2bouquet[$i]->e2servicelist->e2service as $e2service) {
+				$e2service_refr = $e2service->e2servicereference;
+				$e2service_name = $e2service->e2servicename;
 
-            $i++;
-        }
+				if(strstr($e2service_refr, "1:64") == false) {
+					$m3u .= '#EXTINF:0 tvg-id="ext" group-title="Channels",' . $e2service_name . PHP_EOL . $dreambox->streamAddress . $e2service_refr . PHP_EOL;
+				}
+			}
 
-        header('Content-Type: plain/text');
-        header('Content-disposition: attachment; filename=' . $dreambox->playlistFilename . '.m3u');
+			$i++;
+		}
 
-        print($m3u);
-    }
+		header('Content-Type: plain/text');
+		header('Content-disposition: attachment; filename=' . $dreambox->playlistFilename . '.m3u');
+
+		print($m3u);
+	}
 }
 else {
-    $html = <<<EOS
+	$html = <<<EOS
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -128,8 +140,8 @@ else {
 	</body>
 </html>
 EOS;
-    
-    print($html);
+
+	print($html);
 }
 
 ?>

@@ -15,6 +15,10 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 ## [Cancelado]
 Nada, por ahora
 
+## [1.0.2] - 2022-04-26
+### Arreglado
+- Mejora en el formato en **dreambox.php**.
+
 ## [1.0.1] - 2021-09-13
 ### Arreglado
 - Calidad de código
@@ -23,4 +27,4 @@ Nada, por ahora
 ### Añadido
 - Archivo README.MD.
 - Archivo CHANGELOG.MD.
-- Versión inicial del código en dreambox.php.
+- Versión inicial del código en **dreambox.php**.
