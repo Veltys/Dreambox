@@ -19,6 +19,7 @@ Nada, por ahora
 ### Añadido
 - Rama *testing*.
 - Tipos de datos definidos en **dreambox.php**.
+- Archivo **Doxyfile** para generar documentación en formato *Doxygen*.
 
 ## [1.0.2] - 2022-04-26
 ### Arreglado
