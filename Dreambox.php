@@ -22,14 +22,14 @@
 class Dreambox {
 	// @formatter:off
 
-	public $ipAddress;															///< IP address of the Enigma2 box on the network, with access to the web interface
-	public $user;																///< User with access to the web interface
-	public $password;															///< Password with access to the web interface
-	public $https;																///< Use secure (https) protocol
-	public $urlAllServices;														///< URL for "all services"
-	public $port;																///< Port of the streaming proxy
-	public $streamAddress;														///< Entire http address and port of the streaming proxy
-	public $playlistFilename;													///< The name of the playlist file, extension will be added automatically
+	public string $ipAddress;													///< IP address of the Enigma2 box on the network, with access to the web interface
+	public string $user;														///< User with access to the web interface
+	public string $password;													///< Password with access to the web interface
+	public bool $https;															///< Use secure (https) protocol
+	public string $urlAllServices;												///< URL for "all services"
+	public int $port;															///< Port of the streaming proxy
+	public string $streamAddress;												///< Entire http address and port of the streaming proxy
+	public string $playlistFilename;											///< The name of the playlist file, extension will be added automatically
 
 	// @formatter:on
 
