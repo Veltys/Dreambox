@@ -20,6 +20,7 @@ Nada, por ahora
 - Rama *testing*.
 - Tipos de datos definidos en **dreambox.php**.
 - Archivo **Doxyfile** para generar documentación en formato *Doxygen*.
+- Acción para generar la documentación de *GitHub Actions* en **.github/workflows/main.yml**.
 
 ### Arreglado
 - Comandos *Doxygen* incorrectos en **dreambox.php**.
