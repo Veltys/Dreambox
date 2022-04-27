@@ -15,7 +15,7 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 ## [Cancelado]
 Nada, por ahora
 
-## [1.0.3] - 2022-04-26
+## [1.0.3] - 2022-04-28
 ### Añadido
 - Rama *testing*.
 - Tipos de datos definidos en **dreambox.php**.
@@ -24,6 +24,9 @@ Nada, por ahora
 
 ### Arreglado
 - Comandos *Doxygen* incorrectos en **dreambox.php**.
+
+### Eliminado
+- Variable no necesaria en **dreambox.php**.
 
 ## [1.0.2] - 2022-04-26
 ### Arreglado
