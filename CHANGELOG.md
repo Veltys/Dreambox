@@ -21,6 +21,9 @@ Nada, por ahora
 - Tipos de datos definidos en **dreambox.php**.
 - Archivo **Doxyfile** para generar documentación en formato *Doxygen*.
 
+### Arreglado
+- Comandos *Doxygen* incorrectos en **dreambox.php**.
+
 ## [1.0.2] - 2022-04-26
 ### Arreglado
 - Mejora en el formato en **dreambox.php**.

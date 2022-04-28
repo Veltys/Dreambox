@@ -6,10 +6,10 @@
  * @file:           Dreambox.php
  * @brief:          Dreambox Enigma2 playlist extractor and transformer
  * @author:         Veltys
- * @originalAuthor: robertut
+ * @author: 		robertut
  * @date:           2022-04-26
  * @version:        1.0.2
- * @usage:          Put on a webserver an visit its URL
+ * @note:	        Usage: Put on a webserver an visit its URL
  * @note:           Original file from ➡️ https://forums.openpli.org/topic/29950-enigma2-channels-list-to-vlc-playlist-converter-php/#entry366485
  * @note:           Based on openwebif api at http://e2devel.com/apidoc/webif/#getallservices
  */
