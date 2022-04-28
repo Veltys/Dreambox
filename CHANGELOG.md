@@ -4,16 +4,20 @@ Todos los cambios importantes en este proyecto serán documentados en este docum
 Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Por hacer (*TODO*)]
-- [ ] Optimizar código
 - [ ] Añadir otros formatos de exportación
 - [ ] Poner más bonito (y estándar) el HTML
 
 ## [Hecho (*DONE*)]
 - [x] Código funcional al 100% y que cumple mis necesidades actuales
+- [x] Optimizar código
 
 
 ## [Cancelado]
 Nada, por ahora
+
+## [2.0.0] - 2022-04-28
+### Añadido
+- Generación de las listas de reproducción en formato POO en **dreambox.php**.
 
 ## [1.0.3] - 2022-04-28
 ### Añadido
@@ -38,6 +42,6 @@ Nada, por ahora
 
 ## [1.0.0] - 2021-09-13
 ### Añadido
-- Archivo README.MD.
-- Archivo CHANGELOG.MD.
+- Archivo **README.md**.
+- Archivo **CHANGELOG.md**.
 - Versión inicial del código en **dreambox.php**.
