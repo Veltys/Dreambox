@@ -15,13 +15,23 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 ## [Cancelado]
 Nada, por ahora
 
+## [1.0.3] - 2022-04-26
+### Añadido
+- Rama *testing*.
+- Tipos de datos definidos en **dreambox.php**.
+- Archivo **Doxyfile** para generar documentación en formato *Doxygen*.
+- Acción para generar la documentación de *GitHub Actions* en **.github/workflows/main.yml**.
+
+### Arreglado
+- Comandos *Doxygen* incorrectos en **dreambox.php**.
+
 ## [1.0.2] - 2022-04-26
 ### Arreglado
 - Mejora en el formato en **dreambox.php**.
 
 ## [1.0.1] - 2021-09-13
 ### Arreglado
-- Calidad de código
+- Calidad de código.
 
 ## [1.0.0] - 2021-09-13
 ### Añadido
