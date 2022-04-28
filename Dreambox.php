@@ -7,8 +7,8 @@
  * @brief:          Dreambox Enigma2 playlist extractor and transformer
  * @author:         Veltys
  * @author: 		robertut
- * @date:           2022-04-26
- * @version:        1.0.2
+ * @date:           2022-04-28
+ * @version:        1.0.3
  * @note:	        Usage: Put on a webserver an visit its URL
  * @note:           Original file from ➡️ https://forums.openpli.org/topic/29950-enigma2-channels-list-to-vlc-playlist-converter-php/#entry366485
  * @note:           Based on openwebif api at http://e2devel.com/apidoc/webif/#getallservices
@@ -68,8 +68,6 @@ function main() {
 	if(isset($_REQUEST["xspf"]) || isset($_REQUEST["m3u"])) {
 		$allsvc = simplexml_load_file($dreambox->urlAllServices);
 
-		$i = 0;
-
 		if(isset($_REQUEST["xspf"]) && $_REQUEST["xspf"] === "save") {
 			$xspf = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL . '<playlist xmlns="http://xspf.org/ns/0/" xmlns:vlc="http://www.videolan.org/vlc/playlist/ns/0/" version="1">' . PHP_EOL . '	<title>TV Channels</title>' . PHP_EOL . '	<trackList>' . PHP_EOL;
 
@@ -78,7 +76,7 @@ function main() {
 
 				$xspf .= '		<track>' . PHP_EOL . '			<location></location>' . PHP_EOL . '			<title>' . $e2bouquet_name . '</title>' . PHP_EOL . '		</track>' . PHP_EOL;
 
-				foreach($allsvc->e2bouquet[$i]->e2servicelist->e2service as $e2service) {
+				foreach($e2bouquet->e2servicelist->e2service as $e2service) {
 					$e2service_refr = $e2service->e2servicereference;
 					$e2service_name = $e2service->e2servicename;
 
@@ -89,8 +87,6 @@ function main() {
 						$xspf .= '		<track>' . PHP_EOL . '			<location>' . $dreambox->streamAddress . $e2service_refr . '</location>' . PHP_EOL . '			<title>' . $e2service_name . '</title>' . PHP_EOL . '		</track>' . PHP_EOL;
 					}
 				}
-
-				$i++;
 
 				$xspf .= '	</trackList>' . PHP_EOL . '</playlist>' . PHP_EOL;
 			}
@@ -106,7 +102,7 @@ function main() {
 			foreach($allsvc->e2bouquet as $e2bouquet) {
 				$e2bouquet_name = $e2bouquet->e2servicename;
 
-				foreach($allsvc->e2bouquet[$i]->e2servicelist->e2service as $e2service) {
+				foreach($e2bouquet->e2servicelist->e2service as $e2service) {
 					$e2service_refr = $e2service->e2servicereference;
 					$e2service_name = $e2service->e2servicename;
 
@@ -114,8 +110,6 @@ function main() {
 						$m3u .= '#EXTINF:0 tvg-id="ext" group-title="Channels",' . $e2service_name . PHP_EOL . $dreambox->streamAddress . $e2service_refr . PHP_EOL;
 					}
 				}
-
-				$i++;
 			}
 
 			header('Content-Type: plain/text');
