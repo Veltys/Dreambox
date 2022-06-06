@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@main
       
       - name: "Doxygen Action"
-        uses: mattnotmitt/doxygen-action@1.9.3
+        uses: mattnotmitt/doxygen-action@master
 
       - name: "Commit"
         run: |
