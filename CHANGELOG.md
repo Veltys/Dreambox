@@ -15,6 +15,10 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 ## [Cancelado]
 Nada, por ahora
 
+## [2.0.1] - 2022-06-07
+### Arreglado
+- Cambiado **.gitignore** por uno más simple.
+
 ## [2.0.0] - 2022-04-28
 ### Añadido
 - Generación de las listas de reproducción en formato POO en **dreambox.php**.
