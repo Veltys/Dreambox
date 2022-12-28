@@ -15,6 +15,10 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 ## [Cancelado]
 Nada, por ahora
 
+## [2.1.3] - 2022-11-28
+### Añadido
+- Más entradas en .gitignore
+
 ## [2.1.2] - 2022-11-28
 ### Añadido
 - GitHub Actions badge
