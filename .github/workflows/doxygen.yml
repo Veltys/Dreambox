@@ -1,7 +1,20 @@
+# Title         : doxygen.yml
+# Description   : Configura GitHub Actions para realizar la documentación en formato Doxygen
+# Author        : Veltys
+# Date          : 2022-12-27
+# Version       : 1.2.2
+# Usage         : (usado externamente)
+# Notes         : 
+
+
 name: Doxygen Action
 
 on: 
   push:
+    branches:
+      - master
+
+  pull_request:
     branches:
       - master
 
