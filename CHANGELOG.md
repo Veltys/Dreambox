@@ -15,6 +15,10 @@ Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y
 ## [Cancelado]
 Nada, por ahora
 
+## [2.1.2] - 2022-11-28
+### Añadido
+- GitHub Actions badge
+
 ## [2.1.1] - 2022-11-28
 ### Arreglado
 - Nombre del archivo generador de la documentación Doxygen
