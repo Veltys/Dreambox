@@ -7,8 +7,8 @@
  * @brief:			Dreambox Enigma2 playlist extractor and transformer
  * @author:			Veltys
  * @author:			robertut
- * @date:			2022-04-28
- * @version:		2.0.0
+ * @date:			2022-11-21
+ * @version:		2.1.0
  * @note:			Usage: Put on a webserver an visit its URL
  * @note:			Original file from ➡️ https://forums.openpli.org/topic/29950-enigma2-channels-list-to-vlc-playlist-converter-php/#entry366485
  * @note:			Based on openwebif api at http://e2devel.com/apidoc/webif/#getallservices
@@ -20,18 +20,14 @@
  * Contiene la configuración necesaria agrupada en un objeto
  */
 class Dreambox {
-	// @formatter:off
-
-	public string $ipAddress;													///< IP address of the Enigma2 box on the network, with access to the web interface
-	public string $user;														///< User with access to the web interface
-	public string $password;													///< Password with access to the web interface
-	public bool $https;															///< Use secure (https) protocol
-	public string $urlAllServices;												///< URL for "all services"
-	public int $port;															///< Port of the streaming proxy
-	public string $streamAddress;												///< Entire http address and port of the streaming proxy
-	public string $playlistFilename;											///< The name of the playlist file, extension will be added automatically
-
-	// @formatter:on
+	public string	$ipAddress;													///< IP address of the Enigma2 box on the network, with access to the web interface
+	public string	$user;														///< User with access to the web interface
+	public string	$password;													///< Password with access to the web interface
+	public bool		$https;														///< Use secure (https) protocol
+	public string	$urlAllServices;											///< URL for "all services"
+	public int		$port;														///< Port of the streaming proxy
+	public string	$streamAddress;												///< Entire http address and port of the streaming proxy
+	public string	$playlistFilename;											///< The name of the playlist file, extension will be added automatically
 
 
 	/**
@@ -39,24 +35,14 @@ class Dreambox {
 	 * Inicializa el objeto
 	 */
 	function __construct() {
-		// @formatter:off
-
-		$this->ipAddress 		= '';
-
-		$this->user 			= '';
-		$this->password 		= '';
-
-		$this->https 			= true;
-
-		$this->urlAllServices 	= 'http' . ($this->https ? 's' : '') . '://' . ($this->user != '' && $this->password != '' ? $this->user . ':' . $this->password . '@' : '') . $this->ipAddress . ':' . '/web/getallservices';
-
-		$this->port 			= '8001';
-
-		$this->streamAddress 	= 'http' . ($this->https ? 's' : '') . '://' . ($this->user != '' && $this->password != '' ? $this->user . ':' . $this->password . '@' : '') . $this->ipAddress . ':' . $this->port . '/';
-
-		$this->playlistFilename = "";
-
-		// @formatter:on
+		$this->ipAddress		= '';
+		$this->user				= '';
+		$this->password			= '';
+		$this->https			= true;
+		$this->port				= '8001';
+		$this->streamAddress	= 'http' . ($this->https ? 's' : '') . '://' . ($this->user != '' && $this->password != '' ? $this->user . ':' . $this->password . '@' : '') . $this->ipAddress . ':' . $this->port . '/';
+		$this->urlAllServices	= $this->streamAddress . 'web/getallservices';
+		$this->playlistFilename	= 'services';
 	}
 }
 
@@ -273,22 +259,7 @@ function main() {
 			$playlist = new playlistM3u();
 		}
 
-		foreach($allsvc->e2bouquet as $e2bouquet) {
-			$e2bouquet_name = $e2bouquet->e2servicename;
-
-			$playlist->addServicio($e2bouquet_name);
-
-			foreach($e2bouquet->e2servicelist->e2service as $e2service) {
-				if(strstr($e2service->e2servicereference, "1:64") != false) {
-					$playlist->addServicio($e2service->e2servicename);
-				}
-				else {
-					$playlist->addServicio($e2service->e2servicename, $dreambox->streamAddress . $e2service->e2servicereference);
-				}
-			}
-
-			$playlist->pie();
-		}
+		makePlaylist($dreambox->streamAddress, $allsvc, $playlist);
 
 		header('Content-Type: plain/text');
 		header('Content-disposition: attachment; filename=' . $dreambox->playlistFilename . '.' . $playlist->getExtension());
@@ -316,6 +287,35 @@ function main() {
 		print($html);
 	}
 }
+
+
+/**
+ * Función makePlaylist()
+ * Conforma la lista de reproducción
+ *
+ * @param	string	url			URL del servicio
+ * @param	string	allsvc		Clase con todos los servicios
+ * @param	string	playlist	Lista de reproducción a corformar
+ */
+function makePlaylist($url, $allsvc, $playlist) {
+	foreach($allsvc->e2bouquet as $e2bouquet) {
+		$e2bouquet_name = $e2bouquet->e2servicename;
+
+		$playlist->addServicio($e2bouquet_name);
+
+		foreach($e2bouquet->e2servicelist->e2service as $e2service) {
+			if(strstr($e2service->e2servicereference, "1:64") != false) {
+				$playlist->addServicio($e2service->e2servicename);
+			}
+			else {
+				$playlist->addServicio($e2service->e2servicename, $url . $e2service->e2servicereference);
+			}
+		}
+
+		$playlist->pie();
+	}
+}
+
 
 main();
 
