@@ -7,8 +7,8 @@
  * @brief:			Dreambox Enigma2 playlist extractor and transformer
  * @author:			Veltys
  * @author:			robertut
- * @date:			2022-11-21
- * @version:		2.1.0
+ * @date:			2022-12-29
+ * @version:		2.1.1
  * @note:			Usage: Put on a webserver an visit its URL
  * @note:			Original file from ➡️ https://forums.openpli.org/topic/29950-enigma2-channels-list-to-vlc-playlist-converter-php/#entry366485
  * @note:			Based on openwebif api at http://e2devel.com/apidoc/webif/#getallservices
@@ -16,10 +16,12 @@
 
 
 /**
- * Clase Dreambox
- * Contiene la configuración necesaria agrupada en un objeto
+ * Dreambox class
+ * Contains the necessary configuration grouped in an object
  */
 class Dreambox {
+	// @formatter:off
+
 	public string	$ipAddress;													///< IP address of the Enigma2 box on the network, with access to the web interface
 	public string	$user;														///< User with access to the web interface
 	public string	$password;													///< Password with access to the web interface
@@ -29,12 +31,16 @@ class Dreambox {
 	public string	$streamAddress;												///< Entire http address and port of the streaming proxy
 	public string	$playlistFilename;											///< The name of the playlist file, extension will be added automatically
 
+	// @formatter:on
+
 
 	/**
-	 * Constructor de clase
-	 * Inicializa el objeto
+	 * Class constructor
+	 * Initializes the object
 	 */
 	function __construct() {
+		// @formatter:off
+
 		$this->ipAddress		= '';
 		$this->user				= '';
 		$this->password			= '';
@@ -43,72 +49,74 @@ class Dreambox {
 		$this->streamAddress	= 'http' . ($this->https ? 's' : '') . '://' . ($this->user != '' && $this->password != '' ? $this->user . ':' . $this->password . '@' : '') . $this->ipAddress . ':' . $this->port . '/';
 		$this->urlAllServices	= $this->streamAddress . 'web/getallservices';
 		$this->playlistFilename	= 'services';
+
+		// @formatter:on
 	}
 }
 
 
 /**
- * Interfaz iPlaylist
- * Especifica los prototipos de los métodos comunes a cada uno de los formatos
+ * iPlaylist interface
+ * Specifies the prototypes of the methods common to each of the formats
  */
 interface iPlaylist {
 
 
 	/**
-	 * Función addServicio()
-	 * Añade un servicio a la lista de reproducción
+	 * addService() Function
+	 * Adds a service to the playlist
 	 *
-	 * @param	string	nombre		Nombre del servicio
-	 * @param	string	dirección	Dirección del servicio
+	 * @param	string	name		Service name
+	 * @param	string	address		Service address
 	 */
-	public function addServicio();
+	public function addService();
 
 
 	/**
-	 * Función getExtension($ext)
-	 * Observador de la variable homónima
+	 * getExtension($ext) function
+	 * _extension variable getter
 	 *
-	 * @retval	string				Extensión de la lista de reproducción
+	 * @retval	string				Playlist extension
 	 */
 	public function getExtension();
 
 
 	/**
-	 * Función pie()
-	 * Añade el pie (terminador) de la lista de reproducción
+	 * Función footer()
+	 * Add the footer (terminator) of the playlist
 	 */
-	public function pie();
+	public function footer();
 }
 
 
 /**
- * Clase abstracta aPlaylist
- * Implementa la interfaz iPlayList
- * Continúa especificando los prototipos de los métodos comunes a cada uno de los formatos
+ * Abstract class aPlaylist
+ * Implements the iPlayList interface
+ * Continues specifying the prototypes of the methods common to each of the formats
  */
 abstract class aPlaylist implements iPlaylist {
 
 
 	// @formatter:off
 
-	protected string $_extension;												///< Texto con la extension de la lista de reproducción
-	protected string $_playlist;												///< Texto de la lista de reproducción
+	protected string $_extension;												///< Playlist extension string
+	protected string $_playlist;												///< Playlist string
 
 	// @formatter:on
 
 
 	/**
-	 * Función _encabezado()
-	 * Inicializa la playlist con el encabezado adecuado al formato
+	 * _header() function
+	 * Initializes the playlist with the appropriate header for the format
 	 */
-	protected abstract function _encabezado();
+	protected abstract function _header();
 
 
 	/**
-	 * Función _setExtension($ext)
-	 * Modificador de la variable homónima
+	 * _setExtension($ext) function
+	 * _extension variable setter
 	 *
-	 * @param	string	ext			Extensión de la lista de reproducción
+	 * @param	string	ext			Playlist extension
 	 */
 	protected function _setExtension($ext) {
 		$this->_extension = $ext;
@@ -116,10 +124,10 @@ abstract class aPlaylist implements iPlaylist {
 
 
 	/**
-	 * Función getExtension($ext)
-	 * Observador de la variable homónima
+	 * getExtension() function
+	 * _extension variable getter
 	 *
-	 * @retval	string				Extensión de la lista de reproducción
+	 * @retval	string				Playlist extension
 	 */
 	public function getExtension() {
 		return $this->_extension;
@@ -127,10 +135,10 @@ abstract class aPlaylist implements iPlaylist {
 
 
 	/**
-	 * Métodos mágico __tostring()
-	 * Retorna el contenido de la lista de reproducción
+	 * __tostring() magic method
+	 * Returns the content of the playlist
 	 *
-	 * @retval	string				Contenido de la lista de reproducción
+	 * @retval	string				Playlist content
 	 */
 	public function __toString() {
 		return $this->_playlist;
@@ -139,41 +147,41 @@ abstract class aPlaylist implements iPlaylist {
 
 
 /**
- * Clase playlistXspf
- * Extiende la clase abstracta aPlaylist
- * Genera una lista de reproducción en formato xspf
- * Al acabar de añadir servicios, es necesario terminarla llamando a la función pie()
+ * playlistXspf class
+ * Extends the abstract class aPlaylist
+ * Generates a playlist in xspf format
+ * When adding services is finished, it is necessary to finish it by calling the footer() function
  */
 class playlistXspf extends aPlaylist {
 
 
 	/**
-	 * Constructor de clase
-	 * Inicializa el objeto
+	 * Class constructor
+	 * Initialize the object
 	 */
 	function __construct() {
-		$this->_encabezado();
+		$this->_header();
 		$this->_setExtension('xspf');
 	}
 
 
 	/**
-	 * Función _encabezado()
-	 * Inicializa la playlist con el encabezado adecuado al formato xspf
+	 * _header() function
+	 * Initializes the playlist with the appropriate header for the xspf format
 	 */
-	protected function _encabezado() {
+	protected function _header() {
 		$this->_playlist = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL . '<playlist xmlns="http://xspf.org/ns/0/" xmlns:vlc="http://www.videolan.org/vlc/playlist/ns/0/" version="1">' . PHP_EOL . '	<title>TV Channels</title>' . PHP_EOL . '	<trackList>' . PHP_EOL;
 	}
 
 
 	/**
-	 * Función addServicio()
-	 * Añade un servicio a la lista de reproducción xspf
+	 * addService() function
+	 * Add a service to the xspf playlist
 	 *
-	 * @param	string	nombre		Nombre del servicio
-	 * @param	string	dirección	Dirección del servicio
+	 * @param	string	name		Service name
+	 * @param	string	address		Service address
 	 */
-	public function addServicio() {
+	public function addService() {
 		if(func_num_args() == 1) {
 			$this->_playlist .= '		<track>' . PHP_EOL . '			<location></location>' . PHP_EOL . '			<title>' . func_get_arg(0) . '</title>' . PHP_EOL . '		</track>' . PHP_EOL;
 		}
@@ -184,51 +192,51 @@ class playlistXspf extends aPlaylist {
 
 
 	/**
-	 * Función pie()
-	 * Añade el pie (terminador) de la lista de reproducción xspf
+	 * footer() function
+	 * Add footer (terminator) of xspf playlist
 	 */
-	public function pie() {
+	public function footer() {
 		$this->_playlist .= '	</trackList>' . PHP_EOL . '</playlist>' . PHP_EOL;
 	}
 }
 
 
 /**
- * Clase playlistM3u
- * Extiende la clase abstracta aPlaylist
- * Genera una lista de reproducción en formato m3u
- * Al acabar de añadir servicios, es necesario terminarla llamando a la función pie()
+ * playlistM3u class
+ * Extends the abstract class aPlaylist
+ * Generate a playlist in m3u format
+ * When adding services is finished, it is necessary to finish it by calling the footer() function
  */
 class playlistM3u extends aPlaylist {
 
 
 	/**
-	 * Constructor de clase
-	 * Inicializa el objeto
+	 * Class constructor
+	 * Initialize the object
 	 */
 	function __construct() {
-		$this->_encabezado();
+		$this->_header();
 		$this->_setExtension('m3u');
 	}
 
 
 	/**
-	 * Función _encabezado()
-	 * Inicializa la playlist con el encabezado adecuado al formato m3u
+	 * _header() function
+	 * Initializes the playlist with the appropriate header for the m3u format
 	 */
-	protected function _encabezado() {
+	protected function _header() {
 		$this->_playlist = '#EXTM3U' . PHP_EOL;
 	}
 
 
 	/**
-	 * Función addServicio()
-	 * Añade un servicio a la lista de reproducción m3u
+	 * addService() function
+	 * Add a service to the m3u playlist
 	 *
-	 * @param	string	nombre		Nombre del servicio
-	 * @param	string	dirección	Dirección del servicio
+	 * @param	string	name		Service name
+	 * @param	string	address		Service address
 	 */
-	public function addServicio() {
+	public function addService() {
 		if(func_num_args() == 2) {
 			$this->_playlist .= '#EXTINF:0 tvg-id="ext" group-title="Channels",' . func_get_arg(0) . PHP_EOL . func_get_arg(1) . PHP_EOL;
 		}
@@ -236,11 +244,11 @@ class playlistM3u extends aPlaylist {
 
 
 	/**
-	 * Función pie()
-	 * Añade el pie (terminador) de la lista de reproducción m3u
+	 * footer() function
+	 * Add footer (terminator) of m3u playlist
 	 */
-	public function pie() {
-		// El formato m3u no necesita pie
+	public function footer() {
+		// m3u format does not need a footer
 	}
 }
 
@@ -290,29 +298,29 @@ function main() {
 
 
 /**
- * Función makePlaylist()
- * Conforma la lista de reproducción
+ * makePlaylist() function
+ * Make the playlist
  *
- * @param	string	url			URL del servicio
- * @param	string	allsvc		Clase con todos los servicios
- * @param	string	playlist	Lista de reproducción a corformar
+ * @param	string	url			Service URL
+ * @param	string	allsvc		Class with all services
+ * @param	string	playlist	Playlist to make
  */
 function makePlaylist($url, $allsvc, $playlist) {
 	foreach($allsvc->e2bouquet as $e2bouquet) {
 		$e2bouquet_name = $e2bouquet->e2servicename;
 
-		$playlist->addServicio($e2bouquet_name);
+		$playlist->addService($e2bouquet_name);
 
 		foreach($e2bouquet->e2servicelist->e2service as $e2service) {
 			if(strstr($e2service->e2servicereference, "1:64") != false) {
-				$playlist->addServicio($e2service->e2servicename);
+				$playlist->addService($e2service->e2servicename);
 			}
 			else {
-				$playlist->addServicio($e2service->e2servicename, $url . $e2service->e2servicereference);
+				$playlist->addService($e2service->e2servicename, $url . $e2service->e2servicereference);
 			}
 		}
 
-		$playlist->pie();
+		$playlist->footer();
 	}
 }
 
