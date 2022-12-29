@@ -3,7 +3,7 @@
 # Author        : Veltys
 # Date          : 2022-12-27
 # Version       : 1.2.2
-# Usage         : (usado externamente)
+# Usage         : (used externally)
 # Notes         : 
 
 
@@ -34,7 +34,7 @@ jobs:
           git add docs/
           git commit -m "ADD: HTML Doxygen documentation"
 
-      - name: GitHub Push
+      - name: "GitHub Push"
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
