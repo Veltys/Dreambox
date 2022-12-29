@@ -18,6 +18,7 @@ Nothing for now
 ## [2.2.0] - 2022-11-29
 ### Fixed
 - English translation in **CHANGELOG.md**
+- Improved formatting in **README.md**
 
 ## [2.1.4] - 2022-11-29
 ### Added
