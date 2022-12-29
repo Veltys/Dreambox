@@ -3,7 +3,7 @@
 [![Build Status](https://github.com/Veltys/Dreambox/actions/workflows/doxygen.yml/badge.svg?branch=master)](https://github.com/Veltys/Dreambox/actions)
 [![GitHub commits](https://badgen.net/github/commits/Veltys/Dreambox)](https://GitHub.com/Veltys/Dreambox/commit/)
 [![GitHub latest commit](https://badgen.net/github/last-commit/Veltys/Dreambox)](https://GitHub.com/Veltys/Dreambox/commit/)
-[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/Veltys/Dreambox/blob/master/LICENSE.md)
+[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://github.com/Veltys/Dreambox/blob/master/LICENSE)
 [![Changelog](https://img.shields.io/badge/Changelog%3F-here-green.svg)](https://github.com/Veltys/Dreambox/blob/master/CHANGELOG.md)
 
 Dreambox Enigma2 playlist extractor and transformer
