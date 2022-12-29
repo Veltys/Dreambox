@@ -1,79 +1,79 @@
 # Changelog
-Todos los cambios importantes en este proyecto serán documentados en este documento.
+All major changes in this project will be documented in this document.
 
-Su formato se basa en [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) y este proyecto se adhiere a [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+Its format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Por hacer (*TODO*)]
-- [ ] Añadir otros formatos de exportación
-- [ ] Poner más bonito (y estándar) el HTML
+## [TODO list]
+- [ ] Add other export formats
+- [ ] Make the HTML more beautiful (and standard)
 
-## [Hecho (*DONE*)]
-- [x] Código funcional al 100% y que cumple mis necesidades actuales
-- [x] Optimizar código
+## [DONE list]
+- [x] 100% functional code that meets my current needs
+- [x] Optimize code
 
 
-## [Cancelado]
-Nada, por ahora
+## [Cancelled]
+Nothing for now
+
+## [2.2.0] - 2022-11-29
+### Fixed
+- English translation in **CHANGELOG.md**
 
 ## [2.1.4] - 2022-11-29
-### Añadido
-- Más badges
+### Added
+- More badges
 
 ## [2.1.3] - 2022-11-28
-### Añadido
-- Más entradas en .gitignore
-
-## [2.1.3] - 2022-11-28
-### Añadido
-- Más entradas en .gitignore
+### Added
+- More entries in **.gitignore**
 
 ## [2.1.2] - 2022-11-28
-### Añadido
+### Added
 - GitHub Actions badge
 
 ## [2.1.1] - 2022-11-28
-### Arreglado
-- Nombre del archivo generador de la documentación Doxygen
+### Fixed
+- Name of the Doxygen documentation generator file
 
 ## [2.1.0] - 2022-11-21
-### Arreglado
-- Optimizaciones varias
+### Fixed
+- Various optimizations
 
 ## [2.0.2] - 2022-06-07
-### Arreglado
-- Arreglo menor en **.github/workflows/main.yml**
+### Fixed
+- Minor fix in **.github/workflows/main.yml**
 
 ## [2.0.1] - 2022-06-07
-### Arreglado
-- Cambiado **.gitignore** por uno más simple
+### Fixed
+- Changed **.gitignore** to a simpler one
 
 ## [2.0.0] - 2022-04-28
-### Añadido
-- Generación de las listas de reproducción en formato POO en **dreambox.php**
+### Added
+- Generation of playlists in OOP format in **dreambox.php**
 
 ## [1.0.3] - 2022-04-28
-### Añadido
-- Rama *testing*
-- Tipos de datos definidos en **dreambox.php**
-- Archivo **Doxyfile** para generar documentación en formato *Doxygen*
-- Acción para generar la documentación de *GitHub Actions* en **.github/workflows/main.yml**
+### Added
+- *testing* branch
+- Defined data types in **dreambox.php**
+- **Doxyfile** file to generate documentation in *Doxygen* format
+- Action to generate the *GitHub Actions* documentation in **.github/workflows/main.yml**
 
-### Arreglado
-- Comandos *Doxygen* incorrectos en **dreambox.php**
+### Fixed
+- Incorrect *Doxygen* commands in **dreambox.php**
 
-### Eliminado
-- Variable no necesaria en **dreambox.php**
+### Deleted
+- Not needed variable in **dreambox.php**
 
 ## [1.0.2] - 2022-04-26
-### Arreglado
-- Mejora en el formato en **dreambox.php**
+### Fixed
+- Improved formatting in **dreambox.php**
 
 ## [1.0.1] - 2021-09-13
-### Arreglado
-- Calidad de código
+### Fixed
+- Code quality
 
 ## [1.0.0] - 2021-09-13
-### Añadido
-- Archivo **README.md**
-- Archivo **CHANGELOG.md**
-- Versión inicial del código en **dreambox.php**
+### Added
+- **README.md** file
+- **CHANGELOG.md** file
+- Initial version of the code in **dreambox.php**
